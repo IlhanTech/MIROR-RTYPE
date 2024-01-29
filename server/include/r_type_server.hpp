@@ -43,11 +43,19 @@
             void handleAcknowledgment(int requestId, connectionData connData, int status
             , std::string customResponse);
             void processRequest(char* requestBuffer, size_t bufferSize, c_client clientData);
-            void addEntity(std::unique_ptr<Entity> entity);
+            void addPlayer(std::unique_ptr<Player> player);
+            void addMissile(std::unique_ptr<MissileEntity> missile);
+            void addMob(std::unique_ptr<MobsEntity> mob);
             Player *getPlayerByUid(int uniqueId);
-            Entity *getEntityByUid(int uniqueId);
+            MobsEntity *getMobByUid(int uniqueId);
+            MissileEntity *getMissileByUid(int uniqueId);
+            int getMissilesSize();
+            int getMobsSize();
             std::vector<Player *> getAllPlayers();
-            std::vector<std::unique_ptr<Entity>>& getEntities();
+            //std::vector<std::unique_ptr<Entity>>& getEntities();
+            std::vector<std::unique_ptr<Player>>& getPlayerEntities();
+            std::vector<std::unique_ptr<MissileEntity>>& getMissileEntities();
+            std::vector<std::unique_ptr<MobsEntity>>& getMobsEntities();
             std::vector<c_client> getConnectedClients();
             sf::UdpSocket& getServerSocket();
             bool checkIfPlayerExists(connectionData connData);
@@ -59,7 +67,10 @@
             sf::UdpSocket serverSocket;
             std::vector<c_client> connectedClients;
             Game game;
-            std::vector<std::unique_ptr<Entity>> entities;
+            // std::vector<std::unique_ptr<Entity>> entities;
+            std::vector<std::unique_ptr<Player>> playerEntities;
+            std::vector<std::unique_ptr<MissileEntity>> missileEntities;
+            std::vector<std::unique_ptr<MobsEntity>> mobsEntities;
     };
 
     int generateUniqueId(r_type_server *server, int current_id);

@@ -14,9 +14,12 @@
     {
         public:
             MobsEntity();
+            MobsEntity(int id);
             ~MobsEntity();
 
+            virtual int getUid() override;
         private:
+            int id;
     };
 
 #endif /* !MOBSENTITY_HPP_ */

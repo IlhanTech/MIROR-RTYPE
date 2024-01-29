@@ -26,6 +26,8 @@ public:
     pos getPosition();
     gameplayData getGameplayData();
 
+    virtual int getUid() override;
+
 private:
     connectionData connData;
     gameStateData gStateData;

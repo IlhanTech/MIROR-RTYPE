@@ -15,17 +15,28 @@ r_type_server::~r_type_server() {}
 
 Game r_type_server::getGame() { return (this->game); }
 
-void r_type_server::addEntity(std::unique_ptr<Entity> entity)
-{ this->entities.push_back(std::move(entity)); }
+void r_type_server::addPlayer(std::unique_ptr<Player> player)
+{
+    this->playerEntities.push_back(std::move(player));
+}
+
+void r_type_server::addMissile(std::unique_ptr<MissileEntity> missile)
+{
+    this->missileEntities.push_back(std::move(missile));
+}
+
+void r_type_server::addMob(std::unique_ptr<MobsEntity> mob)
+{
+    this->mobsEntities.push_back(std::move(mob));
+}
+
 
 std::vector<Player *> r_type_server::getAllPlayers()
 {
     std::vector<Player *> players;
 
-    for (auto &entity : this->entities) {
-        if (Player *player = dynamic_cast<Player *>(entity.get())) {
-            players.emplace_back(player);
-        }
+    for (auto &player : this->playerEntities) {
+        players.emplace_back(player.get());
     }
     return (players);
 }
@@ -42,37 +53,80 @@ sf::UdpSocket& r_type_server::getServerSocket()
 
 Player *r_type_server::getPlayerByUid(int uniqueId)
 {
-    for (auto &entity : this->entities) {
-        if (Player *player = dynamic_cast<Player *>(entity.get())) {
-            if (player->getConnectionData().clientUniqueId == uniqueId)
-                return (player);
-        }
+    for (auto &player : this->playerEntities) {
+        if (player->getConnectionData().clientUniqueId == uniqueId)
+            return (player.get());
     }
     return (nullptr);
 }
 
-Entity *r_type_server::getEntityByUid(int uniqueId)
+MobsEntity *r_type_server::getMobByUid(int uniqueId)
 {
-    for (auto& entity : this->entities) {
-        if (entity->getUid() == uniqueId) {
-            return (entity.get());
+    for (auto& mob : this->mobsEntities) {
+        if (mob->getUid() == uniqueId) {
+            return (mob.get());
         }
     }
     return (nullptr);
 }
 
-std::vector<std::unique_ptr<Entity>>& r_type_server::getEntities()
-{ return (this->entities); }
+MissileEntity *r_type_server::getMissileByUid(int uniqueId)
+{
+    for (auto& missile : this->missileEntities) {
+        if (missile->getUid() == uniqueId) {
+            return (missile.get());
+        }
+    }
+    return (nullptr);
+}
+
+int r_type_server::getMissilesSize()
+{
+    int size = 0;
+
+    for (auto& missile : this->missileEntities) {
+        ++size;
+    }
+
+    return (size);
+}
+
+int r_type_server::getMobsSize()
+{
+    int size = 0;
+
+    for (auto& mob : this->mobsEntities) {
+        ++size;
+    }
+
+    return (size);
+}
+
+// std::vector<std::unique_ptr<Entity>>& r_type_server::getEntities()
+// { return (this->entities); }
+
+std::vector<std::unique_ptr<Player>>& r_type_server::getPlayerEntities()
+{
+    return (this->playerEntities);
+}
+
+std::vector<std::unique_ptr<MissileEntity>>& r_type_server::getMissileEntities()
+{
+    return (this->missileEntities);
+}
+
+std::vector<std::unique_ptr<MobsEntity>>& r_type_server::getMobsEntities()
+{
+    return (this->mobsEntities);
+}
 
 bool r_type_server::checkIfPlayerExists(connectionData connData)
 {
-    for (auto& entity : this->getEntities()) {
-        if (Player *player = dynamic_cast<Player *>(entity.get())) {
-            if (player->getConnectionData().clientAddress == connData.clientAddress
-            && player->getConnectionData().clientPort == connData.clientPort) {
-                if (player->getConnectionData().clientUniqueId != -1)
-                    return (true);
-            }
+    for (auto& player : this->getPlayerEntities()) {
+        if (player->getConnectionData().clientAddress == connData.clientAddress
+        && player->getConnectionData().clientPort == connData.clientPort) {
+            if (player->getConnectionData().clientUniqueId != -1)
+                return (true);
         }
     }
     return (false);
@@ -100,6 +154,12 @@ void r_type_server::handleAcknowledgment(int requestId, connectionData connData,
     if (requestId == 3) {
         response = response + " playerNumber:" + std::to_string(this->getAllPlayers().size());
     }
+    if (requestId == 4) {
+        response = customResponse;
+    }
+    if (requestId == 7) {
+        response = customResponse;
+    }
     if (requestId == 8) {
         response = customResponse;
     }
@@ -108,7 +168,7 @@ void r_type_server::handleAcknowledgment(int requestId, connectionData connData,
         + customResponse;
     }
     this->serverSocket.send(response.c_str(), response.size(), connData.clientAddress, connData.clientPort);
-    printf("sent response: [%s]\n",response.c_str());
+    printf("sent response: [%s]\n\n",response.c_str());
 }
 
 void r_type_server::processRequest(char* buffer, size_t bufferSize, c_client clientData)

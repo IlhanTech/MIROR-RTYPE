@@ -26,13 +26,17 @@
             , r_type_server *server, std::string *customResponse);
             int handle_disconnect(requestData reqData, connectionData connData
             , r_type_server *server, std::string *customResponse);
-            int handle_unknown(requestData reqData, connectionData connData
-            , r_type_server *server, std::string *customResponse);
             int handle_spawn_entity(requestData reqData, connectionData connData
             , r_type_server *server, std::string *customResponse);
             int handle_position_update(requestData reqData, connectionData connData
             , r_type_server *server, std::string *customResponse);
             int handle_getAllPlayers(requestData reqData, connectionData connData
+            , r_type_server *server, std::string *customResponse);
+            int handle_getAllMissiles(requestData reqData, connectionData connData
+            , r_type_server *server, std::string *customResponse);
+            int handle_getAllMobs(requestData reqData, connectionData connData
+            , r_type_server *server, std::string *customResponse);
+            int handle_kill(requestData reqData, connectionData connData
             , r_type_server *server, std::string *customResponse);
         private:
     };

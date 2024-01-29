@@ -19,6 +19,11 @@ Player::~Player()
 
 }
 
+int Player::getUid()
+{
+    return (this->connData.clientUniqueId);
+}
+
 void Player::setGameStateData(gameStateData datas)
 {
     this->gStateData = datas;
