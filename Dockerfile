@@ -11,4 +11,4 @@ RUN ./build.sh server
 
 EXPOSE 3004
 
-CMD ["bash", "-c", "./r_type_server 3004"]
+RUN ./r_type_server 3004
