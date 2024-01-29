@@ -9,6 +9,8 @@ RUN apt-get update && \
 
 RUN ./build.sh server
 
+RUN chmod +x r_type_server
+
 EXPOSE 3004
 
 RUN ./r_type_server 3004
