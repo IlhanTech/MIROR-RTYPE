@@ -15,7 +15,7 @@ int main(int argc, char **argv)
         return (-1);
     }
 
-    client = new r_type_client(3004, argv[1]);
+    client = new r_type_client(8000, argv[1]);
     if (client->bindClientToServer() != 0) {
         std::cout << "Cannot connect to given adress '" << client->getServerIp()
         << ":" << client->getServerPort() << "'\n";
