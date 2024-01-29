@@ -13,4 +13,4 @@ RUN chmod 777 r_type_server
 
 EXPOSE 3004
 
-RUN ./r_type_server 3004
+CMD ["./r_type_server", "3004"]
