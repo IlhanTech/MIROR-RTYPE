@@ -28,4 +28,4 @@ jobs:
 
     - name: Déployer sur le Serveur
       run: |
-        ssh -i ${{ secrets.DEPLOY_KEY }} root@68.183.79.110 'docker pull ***/monserveurimage:tag && docker run -d -p 8000:8000 ***/monserveurimage:tag'
+        ssh -i ${{ secrets.DEPLOY_KEY }} root@68.183.79.110 'docker pull ilhantech/monserveurimage:tag && docker run -d -p 8000:8000 ilhantech/monserveurimage:tag'
