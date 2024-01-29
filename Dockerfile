@@ -9,7 +9,7 @@ RUN apt-get update && \
 
 RUN ./build.sh server
 
-RUN ls -la
+RUN chmod 777 r_type_server
 
 EXPOSE 3004
 
