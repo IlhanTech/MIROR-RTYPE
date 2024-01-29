@@ -1,0 +1,148 @@
+CMD keepAlive
+
+ping the server
+keep the connection alive to avoid timeout
+
+keepAlive <Type> <Id>
+
+requestId = 1
+
+response:
+
+status code 0 for ok -1 for failure
+
+'Type' refers to entity type {player, missile, monster, etc}
+and id to its entity type id : player id, missile id, etc...
+
+
+
+
+
+
+
+
+
+CMD spawnEntity
+
+makes spawn an entity {player, missile, monster, etc..}
+
+spawnEntity <Type>
+
+response:
+
+typeID
+entityID
+status code 0 for ok -1 for failure
+
+CMD moveEntity
+
+makes move an entity on the map to the specified coordinates
+
+moveEntity <typeID> <entityID> <height> <width>
+
+CMD killEntity
+
+kills / removes / delete / an entity from the server
+
+killEntity <typeID> <entityID>
+
+CMD showEntity
+
+display or hide an Entity on the map
+
+showEntity <typeID> <entityID> <true:false>
+
+CMD shoot <typeID> <>
+
+
+
+--------------
+
+NOTE TMP SERV <-> CLIENT gui
+
+server:
+
+
+game gui:
+
+on lance le jeu avec la cmd ./r-type_client <ip> <port>
+=> le gui se lance si le client arrive à se co au serveur
+
+une fois connecté, quand il clique sur play cela crée un nouveau vaisseau
+
+
+
+-------------
+
+
+quand le client se connecte ->
+
+Player {
+    connection_data {
+        int socket;
+        ip;
+        port;
+        etc..
+    };
+    game_state_data {
+        bool isConnected;
+        bool isPlaying;
+        bool isDead;
+        bool hasWon;
+        bool hasLost;
+        int playerNumber;
+    };
+    gameplay_data {
+        int healthPoints;
+        Position pos {
+            int x;
+            int y;
+        };
+        int score;
+    }
+}
+
+=======>
+
+-- un joueur se connecte --
+
+connection_data {
+    int socket;
+    ip;
+    port;
+    etc..
+};
+
+Player player = new Player(connection_data);
+
+-- le joueur clique sur play --
+
+(player.sendCommand() ? )
+
+spawnEntity <PlayerEntity>  // pour le starship
+
+-- le joueur se déplace --
+
+moveEntity <PlayerEntity> <PlayerNumber> <x> <y>
+
+=> le joueur envoie cette commande ; le serveur la reçoit puis renvoie:
+    - status code 0 pour dire ok
+    - status code -1 pour out of bound
+
+-- le joueur tire --
+
+shootEntity <PlayerEntity> <PlayerId> <PlayerPosition>
+
+-- le joueur prend des dégats --
+
+damagedPlayerEntity <PlayerId> <DamageAmount>
+
+-- une entité est delete (mort ou autre) --
+
+killEntity <EntityType> <EntityId>
+
+entityCollide
+
+
+
+faire un broadcast
