@@ -9,4 +9,6 @@ RUN apt-get update && \
 
 RUN ./build.sh server
 
+RUN ls -la
+
 CMD ["./r_type_server", "3004"]
