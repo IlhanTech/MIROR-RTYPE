@@ -10,5 +10,3 @@ RUN apt-get update && \
 RUN ./build.sh server
 
 EXPOSE 3004
-
-CMD ["./r_type_server", "3004"]
