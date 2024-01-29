@@ -24,7 +24,7 @@
             void setHealthPoints(int health);
             pos getPosition();
             void setPosition(pos position);
-            int getUid();
+            virtual int getUid();
             void setUid(int uid);
         private:
             gameplayData gPlayData;

@@ -12,6 +12,8 @@ set(SOURCES
     src/commands/command_list.cpp
     src/Entity/Entity.cpp
     src/Entity/Player/Player.cpp
+    src/Entity/MobsEntity/MobsEntity.cpp
+    src/Entity/MissileEntity/MissileEntity.cpp
     src/unique_id_generation.cpp
     src/Game/Game.cpp
 )

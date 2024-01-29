@@ -12,6 +12,7 @@
 #include <SFML/Graphics.hpp>
 
 namespace Config {
+    constexpr int ServerPort = 11211;
     constexpr int ScreenWidth = 1080;
     constexpr int ScreenHeight = 720;
     constexpr float PlayerSpeed = 5.0f;

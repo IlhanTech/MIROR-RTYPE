@@ -30,11 +30,9 @@ int generateUniqueId(r_type_server *server, int current_id)
     std::uniform_int_distribution<int> distribution(1, 99);
 
     uniqueId = distribution(gen);
-    for (auto& entity : server->getEntities()) {
-        if (Player *player = dynamic_cast<Player *>(entity.get())) {
-            if (player->getConnectionData().clientUniqueId == uniqueId)
-                return (uniqueId = generateUniqueId(server, uniqueId));
-        }
+    for (auto& player : server->getPlayerEntities()) {
+        if (player->getConnectionData().clientUniqueId == uniqueId)
+            return (uniqueId = generateUniqueId(server, uniqueId));
     }
     return (uniqueId);
 }

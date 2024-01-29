@@ -5,7 +5,18 @@
 ** MissileEntity
 */
 
-#include "MissileEntity.hpp"
+#include "../../../include/Entity/MissileEntity/MissileEntity.hpp"
 
 MissileEntity::MissileEntity() {}
+
+MissileEntity::MissileEntity(int id)
+{
+    this->id = id;
+}
+
 MissileEntity::~MissileEntity() {}
+
+int MissileEntity::getUid()
+{
+    return (this->id);
+}

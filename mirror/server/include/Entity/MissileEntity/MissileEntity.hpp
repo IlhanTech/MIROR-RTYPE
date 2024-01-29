@@ -14,9 +14,12 @@
     {
         public:
             MissileEntity();
+            MissileEntity(int id);
             ~MissileEntity();
 
+            virtual int getUid() override;
         private:
+            int id;
     };
 
 #endif /* !MISSILEENTITY_HPP_ */

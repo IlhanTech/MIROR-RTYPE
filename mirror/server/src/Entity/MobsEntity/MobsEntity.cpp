@@ -5,7 +5,15 @@
 ** MobsEntity
 */
 
-#include "MobsEntity.hpp"
+#include "../../../include/Entity/MobsEntity/MobsEntity.hpp"
 
 MobsEntity::MobsEntity() {}
+
+MobsEntity::MobsEntity(int id) { this->id = id; }
+
 MobsEntity::~MobsEntity() {}
+
+int MobsEntity::getUid()
+{
+    return (this->id);
+}

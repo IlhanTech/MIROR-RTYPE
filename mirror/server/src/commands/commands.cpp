@@ -45,22 +45,23 @@ int commands::retrieveCommand(requestData reqData, connectionData connData
 
     typedef int (command_list::*cmdFptr)(requestData reqData, connectionData connData
     , r_type_server *server, std::string *customResponse);
-    cmdFptr fptr[7] = {
+    cmdFptr fptr[9] = {
         &command_list::handle_connect,
         &command_list::handle_disconnect,
         &command_list::handle_play,
         &command_list::handle_spawn_entity,
-        &command_list::handle_unknown,
+        &command_list::handle_getAllMissiles,
         &command_list::handle_getAllPlayers,
-        &command_list::handle_position_update
+        &command_list::handle_kill,
+        &command_list::handle_position_update,
+        &command_list::handle_getAllMobs
     };
 
-    int req_index[7] = {1, 2, 3, 4, 5, 6, 8};
+    int req_index[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 
     command_list cmd;
 
-    for (int i = 0; i < 7; i++) {
-        printf("[cmd_test] %d == %d\n", reqData.requestId, req_index[i]);
+    for (int i = 0; i < 9; i++) {
         if (reqData.requestId == req_index[i]) {
             if (i != 0)
                 if ((playerUid = parseUid(reqData)) == -1)
