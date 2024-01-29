@@ -1,0 +1,26 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: docker build -t monserveurimage .
+
+    - name: Push to Docker Registry
+      run: |
+        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        docker push monserveurimage
+
+    - name: Deploy to VPS
+      run: ssh root@68.183.79.110 'docker pull monserveurimage && docker run -d -p 8000:8000 monserveurimage'
+      env:
+        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
