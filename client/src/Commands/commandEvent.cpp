@@ -60,6 +60,7 @@ int Commands::handlePositionEvent(const char *buffer, Game *game)
         }
         if (mob->getSprite().getPosition().x <= -5) {
             game->getGameEngine().removeMob(mob);
+            // remove mob test comment
             printf("removed mob\n");
             return (0);
         }
