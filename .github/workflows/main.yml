@@ -1,45 +1,34 @@
-name: Mirror to Public Repo
+name: Deploy to VPS
 
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
-  mirror:
+  build_and_deploy:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout original repo
+    - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Clone mirror repository
-      run: |
-        git clone --branch main https://github.com/IlhanTech/MIROR-RTYPE.git mirror
+    - name: Build Docker image
+      run: docker build -t monserveurimage .
 
-    - name: Clean mirror repository
+    - name: Push to Docker Registry
       run: |
-        cd mirror
-        # Find and delete all files and directories, excluding the .git directory
-        find . -not -name '.git' -not -path './.git/*' -delete
-        cd ..
+        docker tag monserveurimage ilhantech/monserveurimage:tag
+        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+        docker push ilhantech/monserveurimage:tag
 
-    - name: Copy contents to mirror
+    - name: Créer un fichier pour la Clé SSH
       run: |
-        rsync -av --exclude='.git' --exclude='mirror' ./ ./mirror/
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
 
-    - name: Commit and push to mirror repository
-      run: |
-        cd mirror
-        git config user.name "IlhanTech"
-        git config user.email "ilhan.neuville@epitech.eu"
-        git add .
-        git diff --staged --quiet || git commit -m "Update from original repo"
-        git remote set-url origin https://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@github.com/IlhanTech/MIROR-RTYPE.git
-        git push origin main
-      env:
-        GITHUB_TOKEN: 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
+    - name: Ajouter la Clé SSH du Serveur aux Hôtes Connus
+      run: ssh-keyscan -H 68.183.79.110 >> ~/.ssh/known_hosts
 
-    - name: Remove mirror directory
-      run: |
-        rm -rf mirror
+    - name: Déployer sur le Serveur
+      run: ssh -i ~/.ssh/id_rsa root@68.183.79.110 'docker pull ilhantech/monserveurimage:tag && docker run -d -p 3004:3004 ilhantech/monserveurimage:tag'
