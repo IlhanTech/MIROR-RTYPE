@@ -1,34 +1,45 @@
-name: Deploy to VPS
+name: Mirror to Public Repo
 
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
-  build_and_deploy:
+  mirror:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout repository
+    - name: Checkout original repo
       uses: actions/checkout@v2
 
-    - name: Build Docker image
-      run: docker build -t monserveurimage .
-
-    - name: Push to Docker Registry
+    - name: Clone mirror repository
       run: |
-        docker tag monserveurimage ilhantech/monserveurimage:tag
-        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-        docker push ilhantech/monserveurimage:tag
+        git clone --branch main https://github.com/IlhanTech/MIROR-RTYPE.git mirror
 
-    - name: Créer un fichier pour la Clé SSH
+    - name: Clean mirror repository
       run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
+        cd mirror
+        # Find and delete all files and directories, excluding the .git directory
+        find . -not -name '.git' -not -path './.git/*' -delete
+        cd ..
 
-    - name: Ajouter la Clé SSH du Serveur aux Hôtes Connus
-      run: ssh-keyscan -H 68.183.79.110 >> ~/.ssh/known_hosts
+    - name: Copy contents to mirror
+      run: |
+        rsync -av --exclude='.git' --exclude='mirror' ./ ./mirror/
 
-    - name: Déployer sur le Serveur
-      run: ssh -i ~/.ssh/id_rsa root@68.183.79.110 'docker pull ilhantech/monserveurimage:tag && docker run -d -p 11211:11211 ilhantech/monserveurimage:tag'
+    - name: Commit and push to mirror repository
+      run: |
+        cd mirror
+        git config user.name "IlhanTech"
+        git config user.email "ilhan.neuville@epitech.eu"
+        git add .
+        git diff --staged --quiet || git commit -m "Update from original repo"
+        git remote set-url origin https://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@github.com/IlhanTech/MIROR-RTYPE.git
+        git push origin main
+      env:
+        GITHUB_TOKEN: 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
+
+    - name: Remove mirror directory
+      run: |
+        rm -rf mirror
