@@ -35,10 +35,10 @@ jobs:
         git config user.email "ilhan.neuville@epitech.eu"
         git add .
         git diff --staged --quiet || git commit -m "Update from original repo"
-        git remote set-url origin https://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@github.com/IlhanTech/MIROR-RTYPE.git
+        git remote set-url origin https://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@github.com/IlhanTech/MIROR-RTYPE.git
         git push origin main
       env:
-        GITHUB_TOKEN: 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
+        GITHUB_TOKEN: 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
 
     - name: Remove mirror directory
       run: |
