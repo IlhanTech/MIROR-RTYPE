@@ -31,4 +31,4 @@ jobs:
       run: ssh-keyscan -H 68.183.79.110 >> ~/.ssh/known_hosts
 
     - name: Déployer sur le Serveur
-      run: ssh -i ~/.ssh/id_rsa root@68.183.79.110 'docker pull ilhantech/monserveurimage:tag && docker run -d -p 3004:3004 ilhantech/monserveurimage:tag'
+      run: ssh -i ~/.ssh/id_rsa root@68.183.79.110 'docker pull ilhantech/monserveurimage:tag && docker run -d -p 11211:11211 ilhantech/monserveurimage:tag'
